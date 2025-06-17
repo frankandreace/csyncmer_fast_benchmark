@@ -7,6 +7,7 @@ Benchmarking closed syncmer computation (C, C++, Rust, Python, Nexflow)
     nextflow run benchmark.nf --url <URL> --outdir <DIR>
     nextflow run benchmark.nf --input_file <FASTA/Q> --outdir <DIR>
     nextflow run benchmark.nf -profile conda --input_file ~/Develop/csyncmer_fast/data/chr19_bit.fa
+    nextflow run benchmark.nf -profile conda --url "https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/009/914/755/GCF_009914755.1_T2T-CHM13v2.0/GCF_009914755.1_T2T-CHM13v2.0_genomic.fna.gz"
 
 
     Input options (priority order):

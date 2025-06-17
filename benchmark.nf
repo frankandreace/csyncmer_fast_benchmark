@@ -11,7 +11,7 @@ params.default_url = "https://zenodo.org/record/RECORD_ID/FILENAME"
 params.outdir = "results"
 
 // tool installation, reinstallation, caching
-params.tool_cache_dir = "$HOME/.nextflow_tool_cache"
+params.cache_dir = "$HOME/.nextflow_tool_cache"
 params.force_reinstall = false
 
 // help message
@@ -307,7 +307,7 @@ process BENCHMARK_SYNCMER_ORIGINAL {
     fi
 
     # run test on input file 
-    ${workflow.projectDir}/tools/syncmer_originalo/syncmer -speedbench 1 -input ${input_file} -k 31 -t 16 -algo 6 > original_implementation_benchmark.tsv 2>&1
+    ${workflow.projectDir}/tools/syncmer_original/o/syncmer -speedbench 1 -input ${input_file} -k 31 -t 16 -algo 6 > original_implementation_benchmark.tsv 2>&1
     
     # parse output and print speed
 
