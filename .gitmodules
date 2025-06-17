@@ -1,0 +1,9 @@
+[submodule "tools/simd-minimizers"]
+	path = tools/simd-minimizers
+	url = https://github.com/rust-seq/simd-minimizers
+[submodule "tools/ntHash-AVX512"]
+	path = tools/ntHash-AVX512
+	url = https://github.com/sadakane/ntHash-AVX512.git
+[submodule "tools/syncmer_original"]
+	path = tools/syncmer_original
+	url = https://github.com/frankandreace/syncmer_original_speed_bench.git
