@@ -5,7 +5,7 @@
 // input possibilities
 params.input_file = null
 params.url = null
-params.default_url = "https://zenodo.org/record/RECORD_ID/FILENAME"
+params.default_url = "https://zenodo.org/records/18761883/files/chr19_chm13_v1.1.fasta.gz"
 
 // output directory
 params.outdir = "results"
@@ -42,7 +42,7 @@ if (params.help) {
     exit 0
 }
 
-// RECORD RUN INFO 
+// RECORD RUN INFO
 process RECORD_RUN_INFO {
     label 'low_resources'
     publishDir "${params.run_outdir}", mode: 'copy'
@@ -52,9 +52,9 @@ process RECORD_RUN_INFO {
 
     script:
     """
-    
+
     RECORD_FILE="run.record"
-    
+
     echo "=====================================" > \$RECORD_FILE
     echo "NEXTFLOW RUN RECORD" >> \$RECORD_FILE
     echo "=====================================" >> \$RECORD_FILE
@@ -99,7 +99,7 @@ process RECORD_RUN_INFO {
     echo "Profile: ${workflow.profile}" >> \$RECORD_FILE
     echo "Container engine: ${workflow.containerEngine ?: 'none'}" >> \$RECORD_FILE
     echo "" >> \$RECORD_FILE
-    
+
     # Execution timeline
     echo "Execution Details:" >> \$RECORD_FILE
     echo "------------------" >> \$RECORD_FILE
@@ -153,9 +153,9 @@ process GET_FASTA_INPUT {
         echo "File size: \${FILE_SIZE} bytes" >> input.info
 
         """
-    
+
     } else {
-        
+
         def download_url = params.url ?: params.default_url
         def url_source = params.url ? "User-provided URL" : "Default URL"
 
@@ -180,7 +180,7 @@ process GET_FASTA_INPUT {
             echo "Downloading file..."
             # Download with proper filename
             wget -O "temp_download" "${download_url}" || curl -L -o "temp_download" "${download_url}"
-            
+
             # Determine extension from filename or content
             EXTENSION="\${FILENAME##*.}"
             if [[ "\${EXTENSION}" == "" || "\${EXTENSION}" == "\${FILENAME}" ]]; then
@@ -191,7 +191,7 @@ process GET_FASTA_INPUT {
                     EXTENSION="fasta"
                 fi
             fi
-            
+
             # Move to final location
             mv temp_download "input_file.\${EXTENSION}"
             # Cache if it's the default URL
@@ -232,12 +232,12 @@ process BENCHMARK_CSYNCMER_FAST {
     """
 }
 
-// CSYNCMER_FAST_AVX512 BENCHMARK 
+// CSYNCMER_FAST_AVX512 BENCHMARK
 process BENCHMARK_CSYNCMER_FAST_AVX512 {
     label 'normal_resources'
     publishDir "${params.benchmark_dir}", mode: 'copy'
 
-    input: 
+    input:
     path input_file
 
     output:
@@ -254,20 +254,20 @@ process BENCHMARK_CSYNCMER_FAST_AVX512 {
         ./configure --prefix="${workflow.projectDir}/tools/ntHash-AVX512"
         make
         make install
-        cd "\$NF_WORKDIR" 
+        cd "\$NF_WORKDIR"
     fi
 
-    # run test on input file 
+    # run test on input file
     ${workflow.projectDir}/tools/ntHash-AVX512/nttest --kmer=31 ${input_file} > csyncmer_fast_AVX512_benchmark.tsv 2>&1
-    
+
     # parse output and print speed
 
     """
 }
 
-// DIGEST BENCHMARK 
+// DIGEST BENCHMARK
 process BENCHMARK_DIGEST {
-    
+
     label 'normal_resources'
     conda 'python=3.13 bioconda::digest'
     publishDir "${params.benchmark_dir}", mode: 'copy'
@@ -289,7 +289,7 @@ process BENCHMARK_SYNCMER_ORIGINAL {
     label 'normal_resources'
     publishDir "${params.benchmark_dir}", mode: 'copy'
 
-    input: 
+    input:
     path input_file
 
     output:
@@ -303,12 +303,12 @@ process BENCHMARK_SYNCMER_ORIGINAL {
         NF_WORKDIR="\${PWD}"
         cd "${workflow.projectDir}/tools/syncmer_original"
         make clean && make -j
-        cd "\$NF_WORKDIR" 
+        cd "\$NF_WORKDIR"
     fi
 
-    # run test on input file 
+    # run test on input file
     ${workflow.projectDir}/tools/syncmer_original/o/syncmer -speedbench 1 -input ${input_file} -k 31 -t 16 -algo 6 > original_implementation_benchmark.tsv 2>&1
-    
+
     # parse output and print speed
 
     """
@@ -328,7 +328,7 @@ process BENCHMARK_SIMD_MINIMIZER {
     """
     #!/bin/bash
     set -euo pipefail
-    
+
     # Use PWD environment variable instead of pwd command
     NF_WORKDIR="\${PWD}"
 
